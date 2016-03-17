@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>My Map</title>
+<link rel="stylesheet" href="https://js.arcgis.com/3.16/esri/css/esri.css">
+	<style>
+      #map {
+	width:900px;
+	height:900px;
+	margin:0;
+	padding:0;
+}
+    </style>
+
+	<script src="https://js.arcgis.com/3.16/"></script>
+
+<script>
+var map;
+
+	require([
+	"esri/map",
+	"esri/dijit/BasemapToggle",
+	"esri/layers/ArcGISDynamicMapServiceLayer",
+	"esri/layers/ImageParameters",
+	"esri/layers/WMSLayer",
+	"dojo/domReady!",
+			],
+	  function (
+		Map, BasemapToggle, ArcGISDynamicMapServiceLayer, ImageParameters,WMSLayer) {
+
+	   map = new Map("map", {
+          basemap: "streets",  //more basemaps http://arcg.is/1JVo6Wd
+          center: [-91.15, 30.45], // longitude, latitude
+          zoom: 15
+        });
+		var toggle = new BasemapToggle({
+        map: map,
+        basemap: "satellite"
+      }, "BasemapToggle");
+      toggle.startup();
+
+		var imageParameters = new ImageParameters();
+			imageParameters.format = "PNG24";
+		var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("https://maps.brgov.com/gis/rest/services/Cadastral/Zoning/MapServer", {
+			"opacity" : 0.5,
+			"imageParameters" : imageParameters
+
+        });
+        map.addLayer(dynamicMapServiceLayer);
+		
+		var WMSLayer = new WMSLayer("https://maps.brgov.com/gis/services/Cadastral/Future_Land_Use/MapServer/WMSServer", {
+            format: "PNG24",
+            visibleLayers: [0]
+          });
+          
+          map.addLayer(WMSLayer);
+      });
+
+</script>
+
+
+
+
+	</head>
+
+	<body>
+		<div id="map"></div>
+
+		
+	</body>
+</html>
